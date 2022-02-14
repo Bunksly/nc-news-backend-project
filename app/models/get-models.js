@@ -24,3 +24,9 @@ exports.fetchArticles = () => {
         return rows
     })
 }
+
+exports.fetchArticleByID = (id) => {
+    return db.query(`
+    SELECT author, title, topic, created_at, votes
+    `)
+}

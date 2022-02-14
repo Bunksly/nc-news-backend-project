@@ -87,4 +87,22 @@ describe('app.js', () => {
             })
         })
     })
+    describe('/api/articles/:article_id', () => {
+        test('stats 200: returns article object with amtching article_id', () => {
+            const expectOuput = {
+                title: "UNCOVERED: catspiracy to bring down democracy",
+                topic: "cats",
+                author: "rogersop",
+                body: "Bastet walks amongst us, and the cats are taking arms!",
+                created_at: 1596464040000,
+                votes: 0,
+              }
+            return request(app)
+            .get('/api/articles/5')
+            .expect(200)
+            .then(({ body : { article }}) => {
+                expect(article).toEqual(expectOuput)
+            })
+        })
+    })
 })
