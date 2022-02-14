@@ -85,6 +85,148 @@ describe('app.js', () => {
                     })
                 })
             })
+            describe('/api/articles queries', () => {
+                describe('sort_by', () => {
+                    test('/api/articles?sort_by=title', () => {
+                        return request(app)
+                        .get('/api/articles?sort_by=title')
+                        .expect(200)
+                        .then(({ body : { articles }}) => {
+                            expect(articles).toBeSortedBy('title', {
+                                descending: true
+                            })
+                        })
+                    })
+                    test('/api/articles?sort_by=author', () => {
+                        return request(app)
+                        .get('/api/articles?sort_by=author')
+                        .expect(200)
+                        .then(({ body : { articles }}) => {
+                            expect(articles).toBeSortedBy('author', {
+                                descending: true
+                            })
+                        })
+                    })
+                    test('/api/articles?sort_by=invalid returns 400 bad sort request', () => {
+                        return request(app)
+                        .get('/api/articles?sort_by=invalid')
+                        .expect(400)
+                        .then(({ text }) => {
+                            expect(text).toBe('Bad Sort Request')
+                        })
+                    })
+                })
+                describe('order', () => {
+                    test('/api/articles?order=asc returns articles ordered by date ascending', () => {
+                        return request(app)
+                        .get('/api/articles?order=asc')
+                        .expect(200)
+                        .then(({ body : { articles }}) => {
+                            expect(articles).toBeSortedBy('created_at')
+                        })
+                    })
+                    test('/api/articles?sort_by=author&order=asc returns articles ordered by author ascending', () => {
+                        return request(app)
+                        .get('/api/articles?sort_by=author&order=asc')
+                        .expect(200)
+                        .then(({ body : { articles }}) => {
+                            expect(articles).toBeSortedBy('author')
+                        })
+                    })
+                    test('/api/articles?order=invalid returns 400 bad order request', () => {
+                        return request(app)
+                        .get('/api/articles?order=invalid')
+                        .expect(400)
+                        .then(({ text }) => {
+                            expect(text).toBe('Bad Order Request')
+                        })
+                    })
+                    test('/api/articles?sort_by=title&order=invalid returns 400 bad order request', () => {
+                        return request(app)
+                        .get('/api/articles?sort_by=title&order=invalid')
+                        .expect(400)
+                        .then(({ text }) => {
+                            expect(text).toBe('Bad Order Request')
+                        })
+                    })
+                })
+                describe('topic', () => {
+                    test('/api/articles?topic=mitch returns articles with topic mitch', () => {
+                        return request(app)
+                        .get('/api/articles?topic=mitch')
+                        .expect(200)
+                        .then(({ body : { articles }}) => {
+                            expect(articles).toHaveLength(11)
+                            expect(articles).toBeSortedBy('created_at', {
+                                descending: true
+                            })
+                            articles.forEach(article => {
+                                expect(article).toEqual(
+                                    expect.objectContaining({
+                                        author: expect.any(String),
+                                        title: expect.any(String),
+                                        topic: expect.any(String),
+                                        created_at: expect.any(String),
+                                        votes: expect.any(Number)
+                                    })
+                                )
+                                expect(article.topic).toBe('mitch')
+                            })
+                        })
+                    })
+                    test('/api/articles?topic=cats returns articles with topic cats', () => {
+                        return request(app)
+                        .get('/api/articles?topic=cats')
+                        .expect(200)
+                        .then(({ body : { articles }}) => {
+                            expect(articles).toHaveLength(1)
+                            articles.forEach(article => {
+                                expect(article).toEqual(
+                                    expect.objectContaining({
+                                        author: expect.any(String),
+                                        title: expect.any(String),
+                                        topic: expect.any(String),
+                                        created_at: expect.any(String),
+                                        votes: expect.any(Number)
+                                    })
+                                )
+                                expect(article.topic).toBe('cats')
+                            })
+                        })
+                    })
+                    test('/api/articles?topic=mitch&sort_by=votes&order=asc', () => {
+                        return request(app)
+                        .get('/api/articles?topic=mitch&sort_by=votes&order=asc')
+                        .expect(200)
+                        .then(({ body : { articles }}) => {
+                            expect(articles).toHaveLength(11)
+                            expect(articles).toBeSortedBy('votes', {
+                                descending: false
+                            })
+                            articles.forEach(article => {
+                                expect(article).toEqual(
+                                    expect.objectContaining({
+                                        author: expect.any(String),
+                                        title: expect.any(String),
+                                        topic: expect.any(String),
+                                        created_at: expect.any(String),
+                                        votes: expect.any(Number)
+                                    })
+                                )
+                                expect(article.topic).toBe('mitch')
+                            })
+                        })
+                    })
+                    test('api/articles?topic=invalid returns 404 topic not found', () => {
+                        return request(app)
+                        .get('/api/articles?topic=invalid')
+                        .expect(404)
+                        .then(({ text }) => {
+                            expect(text).toBe('Topic invalid not found')
+                        })
+                    })
+                })
+            })
         })
     })
 })
