@@ -18,6 +18,7 @@ exports.fetchUsers = () => {
 
 exports.fetchArticles = (sort_by = 'created_at', order = 'desc', topic = undefined) => {
     let whereString = ``
+    const idArray = []
     
     const validSortBys = [
         'created_at',
@@ -41,14 +42,15 @@ exports.fetchArticles = (sort_by = 'created_at', order = 'desc', topic = undefin
     }
 
     if(topic != undefined) {
-        whereString = `WHERE topic = '${topic}'`
+        whereString = `WHERE topic = $1`
+        idArray.push(topic)
     }
 
     return db.query(`
     SELECT author, title, topic, created_at, votes FROM articles
     ${whereString}
     ORDER BY ${sort_by} ${order};
-    `).then(({ rows }) => {
+    `, idArray).then(({ rows }) => {
         return rows
     })
 }
