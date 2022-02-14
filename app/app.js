@@ -1,5 +1,5 @@
 const express = require('express')
-const { getTopics, getUsers } = require('./controllers/get-controllers')
+const { getTopics, getUsers, getArticles } = require('./controllers/get-controllers')
 const { pathNotFoundErr, errorHandler } = require('./controllers/error-controllers')
 
 const app = express()
