@@ -15,7 +15,13 @@ exports.getUsers = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-    fetchArticles().then(articles => {
+    const sort_by = req.query.sort_by
+    const order = req.query.order
+    const topic = req.query.topic
+    fetchArticles(sort_by, order, topic).then(articles => {
+        if(articles.length == 0) {
+            return Promise.reject({ status: 404, msg: `Topic ${topic} not found`})
+        }
         res.status(200).send({ articles })
     })
     .catch(next)

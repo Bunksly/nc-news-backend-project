@@ -16,11 +16,41 @@ exports.fetchUsers = () => {
     })
 }
 
-exports.fetchArticles = () => {
+exports.fetchArticles = (sort_by = 'created_at', order = 'desc', topic = undefined) => {
+    let whereString = ``
+    const idArray = []
+    
+    const validSortBys = [
+        'created_at',
+        'title',
+        'topic',
+        'author',
+        'votes'
+    ]
+
+    const validOrder = [
+        'asc',
+        'desc'
+    ]
+
+    if(!validSortBys.includes(sort_by)) {
+        return Promise.reject({ status: 400, msg: 'Bad Sort Request'})
+    }
+
+    if(!validOrder.includes(order)) {
+        return Promise.reject({ status: 400, msg: 'Bad Order Request'})
+    }
+
+    if(topic != undefined) {
+        whereString = `WHERE topic = $1`
+        idArray.push(topic)
+    }
+
     return db.query(`
     SELECT author, title, topic, created_at, votes FROM articles
-    ORDER BY created_at DESC;
-    `).then(({ rows }) => {
+    ${whereString}
+    ORDER BY ${sort_by} ${order};
+    `, idArray).then(({ rows }) => {
         return rows
     })
 }
