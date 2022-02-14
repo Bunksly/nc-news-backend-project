@@ -47,7 +47,7 @@ exports.fetchArticles = (sort_by = 'created_at', order = 'desc', topic = undefin
     }
 
     return db.query(`
-    SELECT author, title, topic, created_at, votes FROM articles
+    SELECT author, title, topic, created_at, votes, article_id FROM articles
     ${whereString}
     ORDER BY ${sort_by} ${order};
     `, idArray).then(({ rows }) => {
@@ -56,7 +56,11 @@ exports.fetchArticles = (sort_by = 'created_at', order = 'desc', topic = undefin
 }
 
 exports.fetchArticleByID = (id) => {
+    console.log(id)
     return db.query(`
-    SELECT author, title, topic, created_at, votes
-    `)
+    SELECT author, title, topic, created_at, votes, article_id FROM articles
+    WHERE article_id = $1;
+    `, [id]).then(({ rows }) => {
+        return rows[0]
+    })
 }

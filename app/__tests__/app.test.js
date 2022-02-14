@@ -65,6 +65,7 @@ describe('app.js', () => {
                     articles.forEach(article => {
                         expect(article).toEqual(
                             expect.objectContaining({
+                                article_id: expect.any(Number),
                                 author: expect.any(String),
                                 title: expect.any(String),
                                 topic: expect.any(String),
@@ -163,6 +164,7 @@ describe('app.js', () => {
                             articles.forEach(article => {
                                 expect(article).toEqual(
                                     expect.objectContaining({
+                                        article_id: expect.any(Number),
                                         author: expect.any(String),
                                         title: expect.any(String),
                                         topic: expect.any(String),
@@ -183,6 +185,7 @@ describe('app.js', () => {
                             articles.forEach(article => {
                                 expect(article).toEqual(
                                     expect.objectContaining({
+                                        article_id: expect.any(Number),
                                         author: expect.any(String),
                                         title: expect.any(String),
                                         topic: expect.any(String),
@@ -206,6 +209,7 @@ describe('app.js', () => {
                             articles.forEach(article => {
                                 expect(article).toEqual(
                                     expect.objectContaining({
+                                        article_id: expect.any(Number),
                                         author: expect.any(String),
                                         title: expect.any(String),
                                         topic: expect.any(String),
@@ -228,22 +232,30 @@ describe('app.js', () => {
                 })
             })
         })
-    })
-    describe('/api/articles/:article_id', () => {
-        test('stats 200: returns article object with amtching article_id', () => {
-            const expectOuput = {
-                title: "UNCOVERED: catspiracy to bring down democracy",
-                topic: "cats",
-                author: "rogersop",
-                body: "Bastet walks amongst us, and the cats are taking arms!",
-                created_at: 1596464040000,
-                votes: 0,
-              }
-            return request(app)
-            .get('/api/articles/5')
-            .expect(200)
-            .then(({ body : { article }}) => {
-                expect(article).toEqual(expectOuput)
+        describe('/api/articles/:article_id', () => {
+            test('stats 200: returns article object with amtching article_id', () => {
+                const expectOutput = {
+                    article_id: 5,
+                    title: "UNCOVERED: catspiracy to bring down democracy",
+                    topic: "cats",
+                    author: "rogersop",
+                    created_at: expect.any(String),
+                    votes: 0,
+                  }
+                return request(app)
+                .get('/api/articles/5')
+                .expect(200)
+                .then(({ body : { article }}) => {
+                    expect(article).toEqual(expectOutput)
+                })
+            })
+            test('stats 404: returns 404 article not found when article_id not found', () => {
+                return request(app)
+                .get('/api/articles/9999')
+                .expect(404)
+                .then(({ text }) => {
+                    expect(text).toBe('Article 9999 not found')
+                })
             })
         })
     })
