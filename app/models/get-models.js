@@ -15,3 +15,12 @@ exports.fetchUsers = () => {
         return rows
     })
 }
+
+exports.fetchArticles = () => {
+    return db.query(`
+    SELECT author, title, topic, created_at, votes FROM articles
+    ORDER BY created_at DESC;
+    `).then(({ rows }) => {
+        return rows
+    })
+}
