@@ -55,5 +55,37 @@ describe('app.js', () => {
                 })
             })
         })
+        describe('/api/articles', () => {
+            test('status 200: returns array of article objects', () => {
+                return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body : { articles }}) => {
+                    console.log(articles)
+                    expect(articles).toHaveLength(12)
+                    articles.forEach(article => {
+                        expect(article).toEqual(
+                            expect.objectContaining({
+                                author: expect.any(String),
+                                title: expect.any(String),
+                                topic: expect.any(String),
+                                created_at: expect.any(String),
+                                votes: expect.any(Number)
+                            })
+                        )
+                    })
+                })
+            })
+            test('status 200: returns array of article objects sroted by created_at descending', () => {
+                return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body : { articles }}) => {
+                    expect(articles).toBeSortedBy('created_at', {
+                        descending: true
+                    })
+                })
+            })
+        })
     })
 })

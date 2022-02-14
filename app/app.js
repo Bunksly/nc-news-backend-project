@@ -6,6 +6,7 @@ const app = express()
 
 app.get('/api/topics', getTopics)
 app.get('/api/users', getUsers)
+app.get('/api/articles', getArticles)
 
 app.all('/*', pathNotFoundErr)
 
