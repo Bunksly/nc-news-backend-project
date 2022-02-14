@@ -38,5 +38,22 @@ describe('app.js', () => {
                 })
             })
         })
+        describe('/api/users', () => {
+            test('status 200: returns array of objects containing usernames', () => {
+                return request(app)
+                .get('/api/users')
+                .expect(200)
+                .then(({ body : { users }}) => {
+                    expect(users).toHaveLength(4)
+                    users.forEach(user => {
+                        expect(user).toEqual(
+                            expect.objectContaining({
+                                username: expect.any(String)
+                            })
+                        )
+                    })
+                })
+            })
+        })
     })
 })
