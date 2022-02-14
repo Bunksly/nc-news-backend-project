@@ -61,7 +61,6 @@ describe('app.js', () => {
                 .get('/api/articles')
                 .expect(200)
                 .then(({ body : { articles }}) => {
-                    console.log(articles)
                     expect(articles).toHaveLength(12)
                     articles.forEach(article => {
                         expect(article).toEqual(
