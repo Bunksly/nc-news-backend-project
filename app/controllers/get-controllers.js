@@ -1,4 +1,4 @@
-const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID } = require('../models/get-models')
+const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID } = require('../models/get-models')
 
 exports.getTopics = (req, res, next) => {
     fetchTopics().then(topics => {
@@ -30,6 +30,18 @@ exports.getArticles = (req, res, next) => {
 exports.getArticleByID = (req, res, next) => {
     const id = req.params.article_id
     fetchArticleByID(id).then(article => {
+        if(article == undefined) {
+            return Promise.reject({ status: 404, msg: `Article ${id} not found`})
+        }
+        res.status(200).send({ article })
+    })
+    .catch(next)
+}
+
+exports.patchArticleByID = (req, res, next) => {
+    const id = req.params.article_id
+    const inc_votes = req.body.inc_votes
+    updateArticleByID(id, inc_votes).then(article => {
         if(article == undefined) {
             return Promise.reject({ status: 404, msg: `Article ${id} not found`})
         }

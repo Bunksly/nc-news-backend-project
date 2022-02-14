@@ -56,11 +56,27 @@ exports.fetchArticles = (sort_by = 'created_at', order = 'desc', topic = undefin
 }
 
 exports.fetchArticleByID = (id) => {
-    console.log(id)
     return db.query(`
     SELECT author, title, topic, created_at, votes, article_id FROM articles
     WHERE article_id = $1;
     `, [id]).then(({ rows }) => {
+        return rows[0]
+    })
+}
+
+exports.updateArticleByID = (id, inc_votes) => {
+    if(inc_votes === undefined) {
+        return Promise.reject({ status: 400, msg: `Input object invalid`})
+    }
+    if(typeof(inc_votes) !== 'number') {
+        return Promise.reject({ status: 400, msg: `inc_votes value should be number`})
+    }
+    return db.query(`
+    UPDATE articles
+    SET votes = votes + $2
+    WHERE article_id = $1
+    RETURNING author, title, topic, created_at, votes, article_id;
+    `, [id, inc_votes]).then(({ rows }) => {
         return rows[0]
     })
 }
