@@ -258,7 +258,7 @@ describe('app.js', () => {
                 })
             })
         })
-        describe.only('/api/articles/:article_id/comments', () => {
+        describe('/api/articles/:article_id/comments', () => {
             test('status 200: returns comments for given article', () => {
                 return request(app)
                 .get('/api/articles/5/comments')
