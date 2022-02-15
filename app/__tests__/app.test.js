@@ -112,8 +112,8 @@ describe('app.js', () => {
                         return request(app)
                         .get('/api/articles?sort_by=invalid')
                         .expect(400)
-                        .then(({ text }) => {
-                            expect(text).toBe('Bad Sort Request')
+                        .then(({ body }) => {
+                            expect(body.msg).toBe('Bad Sort Request')
                         })
                     })
                 })
@@ -138,16 +138,16 @@ describe('app.js', () => {
                         return request(app)
                         .get('/api/articles?order=invalid')
                         .expect(400)
-                        .then(({ text }) => {
-                            expect(text).toBe('Bad Order Request')
+                        .then(({ body }) => {
+                            expect(body.msg).toBe('Bad Order Request')
                         })
                     })
                     test('/api/articles?sort_by=title&order=invalid returns 400 bad order request', () => {
                         return request(app)
                         .get('/api/articles?sort_by=title&order=invalid')
                         .expect(400)
-                        .then(({ text }) => {
-                            expect(text).toBe('Bad Order Request')
+                        .then(({ body }) => {
+                            expect(body.msg).toBe('Bad Order Request')
                         })
                     })
                 })
@@ -225,8 +225,8 @@ describe('app.js', () => {
                         return request(app)
                         .get('/api/articles?topic=invalid')
                         .expect(404)
-                        .then(({ text }) => {
-                            expect(text).toBe('Topic invalid not found')
+                        .then(({ body }) => {
+                            expect(body.msg).toBe('Topic invalid not found')
                         })
                     })
                 })
@@ -253,8 +253,8 @@ describe('app.js', () => {
                 return request(app)
                 .get('/api/articles/9999')
                 .expect(404)
-                .then(({ text }) => {
-                    expect(text).toBe('Article 9999 not found')
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Article 9999 not found')
                 })
             })
         })
@@ -303,8 +303,8 @@ describe('app.js', () => {
                 .patch('/api/articles/5')
                 .send(inc_votes)
                 .expect(400)
-                .then(({ text }) => {
-                    expect(text).toBe('Input object invalid')
+                .then(({ body }) => {
+                    expect(body.msg).toEqual('Input object invalid')
                 })
             })
             test('status 400: returns inc_votes should be number', () => {
@@ -313,8 +313,8 @@ describe('app.js', () => {
                 .patch('/api/articles/5')
                 .send(inc_votes)
                 .expect(400)
-                .then(({ text }) => {
-                    expect(text).toBe('inc_votes value should be number')
+                .then(({ body }) => {
+                    expect(body.msg).toBe('inc_votes value should be number')
                 })
             })
             test('status 404: returns article not found when article_id not found', () => {
@@ -323,8 +323,8 @@ describe('app.js', () => {
                 .patch('/api/articles/999')
                 .send(inc_votes)
                 .expect(404)
-                .then(({ text }) => {
-                    expect(text).toBe('Article 999 not found')
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Article 999 not found')
                 })
             })
         })

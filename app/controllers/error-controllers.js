@@ -1,5 +1,6 @@
 exports.errorHandler = (err, req, res, next) => {
-    res.status(err.status).send( err.msg )
+    const { msg } = err
+    res.status(err.status).send( { msg } )
 }
 
 exports.pathNotFoundErr = (req, res) => {

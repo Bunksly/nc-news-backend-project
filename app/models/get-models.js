@@ -77,8 +77,7 @@ exports.updateArticleByID = (id, inc_votes) => {
         inc_votes *= -1
         symbol = `-`
     }
-    console.log(symbol)
-    console.log(inc_votes)
+
 
     return db.query(`
     UPDATE articles
@@ -86,7 +85,6 @@ exports.updateArticleByID = (id, inc_votes) => {
     WHERE article_id = $1
     RETURNING author, title, topic, created_at, votes, article_id;
     `, [id, inc_votes]).then(({ rows }) => {
-        console.log('hello')
         return rows[0]
     })
 }
