@@ -329,4 +329,29 @@ describe('app.js', () => {
             })
         })
     })
+    describe.only('POST', () => {
+        describe('/api/articles/:article_id/comments', () => {
+            test('status 201: returns comment', () => {
+                const input = {
+                    username: 'bunkus',
+                    body: 'additional coffees required'
+                }
+                return request(app)
+                .post('/api/articles/5/comments')
+                .send(input)
+                .expect(201)
+                .then(({ body : { comment }}) => {
+                    expect(comment).toEqual(
+                        expect.objectContaining({
+                            author: expect.toBe('bunkus'),
+                            body: expect.toBe('additional coffees required'),
+                            votes: expect.toBe(0),
+                            article_id: expect.toBe(5),
+                            created_at: expect.any(Number)
+                        })
+                    )
+                })
+            })
+        })
+    })
 })
