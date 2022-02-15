@@ -1,4 +1,4 @@
-const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID } = require('../models/get-models')
+const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, fetchCommentsByArticleID } = require('../models/get-models')
 
 exports.getTopics = (req, res, next) => {
     fetchTopics().then(topics => {
@@ -46,6 +46,25 @@ exports.patchArticleByID = (req, res, next) => {
             return Promise.reject({ status: 404, msg: `Article ${id} not found`})
         }
         res.status(200).send({ article })
+    })
+    .catch(next)
+}
+
+exports.getCommentsByArticleID = (req, res, next) => {
+    const id = req.params.article_id
+    fetchArticleByID(id).then(article => {
+        if(article == undefined) {
+            return Promise.reject({ status: 404, msg: `Article ${id} not found`})
+            .catch((err) => {
+                next(err)
+            })
+        }
+    })
+    fetchCommentsByArticleID(id).then(comments => {
+        if(comments.length == 0) {
+            return Promise.reject({ status: 404, msg: `No comments found`})
+        }
+        res.status(200).send({ comments })
     })
     .catch(next)
 }

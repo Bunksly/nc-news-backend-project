@@ -258,6 +258,43 @@ describe('app.js', () => {
                 })
             })
         })
+        describe.only('/api/articles/:article_id/comments', () => {
+            test('status 200: returns comments for given article', () => {
+                return request(app)
+                .get('/api/articles/5/comments')
+                .expect(200)
+                .then(({ body : { comments }}) => {
+                    expect(comments).toHaveLength(2)
+                    comments.forEach(comment => {
+                        expect(comment).toEqual(
+                            expect.objectContaining({
+                                comment_id: expect.any(Number),
+                                votes: expect.any(Number),
+                                created_at: expect.any(String),
+                                author: expect.any(String),
+                                body: expect.any(String)
+                            })
+                        )
+                    })
+                })
+            })
+            test('status 404: if there are no comments return 404', () => {
+                return request(app)
+                .get('/api/articles/2/comments')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('No comments found')
+                })
+            })
+            test('status 404: if there is no article return 404', () => {
+                return request(app)
+                .get('/api/articles/999/comments')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Article 999 not found')
+                })
+            })
+        })
     })
     describe('PATCH', () => {
         describe('/api/articles/:article_id', () => {

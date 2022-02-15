@@ -88,3 +88,13 @@ exports.updateArticleByID = (id, inc_votes) => {
         return rows[0]
     })
 }
+
+exports.fetchCommentsByArticleID = (id) => {
+    return db.query(`
+    SELECT comment_id, votes, created_at, author, body
+    FROM comments
+    WHERE article_id = $1;
+    `, [id]).then(({ rows }) => {
+        return rows
+    })
+}
