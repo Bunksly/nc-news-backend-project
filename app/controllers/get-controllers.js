@@ -49,3 +49,12 @@ exports.patchArticleByID = (req, res, next) => {
     })
     .catch(next)
 }
+
+exports.postComment = (req, res, next) => {
+    const id = req.params.article_id
+    const body = req.body
+    addComment(id, body).then(comment => {
+        console.log(comment)
+    })
+    .catch(next)
+}
