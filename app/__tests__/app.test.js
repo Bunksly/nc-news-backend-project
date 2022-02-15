@@ -260,7 +260,7 @@ describe('app.js', () => {
         })
     })
     describe('PATCH', () => {
-        describe.only('/api/articles/:article_id', () => {
+        describe('/api/articles/:article_id', () => {
             test('status 200: returns updated article', () => {
                 const inc_votes = { inc_votes : 1 }
                 const expectOutput = {
