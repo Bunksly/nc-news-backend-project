@@ -88,3 +88,11 @@ exports.updateArticleByID = (id, inc_votes) => {
         return rows[0]
     })
 }
+
+exports.addComment = (id, body) => {
+    console.log(id, body)
+    return db.query(`
+    INSERT INTO comments
+    
+    `)
+}
