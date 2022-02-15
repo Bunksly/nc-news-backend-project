@@ -259,4 +259,74 @@ describe('app.js', () => {
             })
         })
     })
+    describe('PATCH', () => {
+        describe.only('/api/articles/:article_id', () => {
+            test('status 200: returns updated article', () => {
+                const inc_votes = { inc_votes : 1 }
+                const expectOutput = {
+                    article_id: 5,
+                    title: "UNCOVERED: catspiracy to bring down democracy",
+                    topic: "cats",
+                    author: "rogersop",
+                    created_at: expect.any(String),
+                    votes: 1,
+                  }
+                return request(app)
+                .patch('/api/articles/5')
+                .send(inc_votes)
+                .expect(200)
+                .then(({ body : { article }}) => {
+                    expect(article).toEqual(expectOutput)
+                })
+            })
+            test('status 200: works with negative numbers', () => {
+                const inc_votes = { inc_votes : -3 }
+                const expectOutput = {
+                    article_id: 5,
+                    title: "UNCOVERED: catspiracy to bring down democracy",
+                    topic: "cats",
+                    author: "rogersop",
+                    created_at: expect.any(String),
+                    votes: -3,
+                  }
+                return request(app)
+                .patch('/api/articles/5')
+                .send(inc_votes)
+                .expect(200)
+                .then(({ body : { article }}) => {
+                    expect(article).toEqual(expectOutput)
+                })
+            })
+            test('status 400: returns input object invalid', () => {
+                const inc_votes = { invalid : 1 }
+                return request(app)
+                .patch('/api/articles/5')
+                .send(inc_votes)
+                .expect(400)
+                .then(({ text }) => {
+                    expect(text).toBe('Input object invalid')
+                })
+            })
+            test('status 400: returns inc_votes should be number', () => {
+                const inc_votes = { inc_votes : 'cat' }
+                return request(app)
+                .patch('/api/articles/5')
+                .send(inc_votes)
+                .expect(400)
+                .then(({ text }) => {
+                    expect(text).toBe('inc_votes value should be number')
+                })
+            })
+            test('status 404: returns article not found when article_id not found', () => {
+                const inc_votes = { inc_votes : 1 }
+                return request(app)
+                .patch('/api/articles/999')
+                .send(inc_votes)
+                .expect(404)
+                .then(({ text }) => {
+                    expect(text).toBe('Article 999 not found')
+                })
+            })
+        })
+    })
 })
