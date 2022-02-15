@@ -55,6 +55,29 @@ describe('app.js', () => {
                 })
             })
         })
+        describe('/api/users/:username', () => {
+            test('status 200: returns user object', () => {
+                const expectedUser = {
+                    username: 'rogersop',
+                    name: 'paul',
+                    avatar_url: 'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4'
+                  }
+                return request(app)
+                .get('/api/users/rogersop')
+                .expect(200)
+                .then(({ body : { user }}) => {
+                    expect(user).toEqual(expectedUser)
+                })
+            })
+            test('status 404: returns user not found', () => {
+                return request(app)
+                .get('/api/users/invalid')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('User invalid not found')
+                })
+            })
+        })
         describe('/api/articles', () => {
             test('status 200: returns array of article objects', () => {
                 return request(app)
@@ -329,11 +352,11 @@ describe('app.js', () => {
             })
         })
     })
-    describe.only('POST', () => {
+    describe('POST', () => {
         describe('/api/articles/:article_id/comments', () => {
             test('status 201: returns comment', () => {
                 const input = {
-                    username: 'bunkus',
+                    username: 'rogersop',
                     body: 'additional coffees required'
                 }
                 return request(app)
@@ -343,13 +366,54 @@ describe('app.js', () => {
                 .then(({ body : { comment }}) => {
                     expect(comment).toEqual(
                         expect.objectContaining({
-                            author: expect.toBe('bunkus'),
-                            body: expect.toBe('additional coffees required'),
-                            votes: expect.toBe(0),
-                            article_id: expect.toBe(5),
-                            created_at: expect.any(Number)
+                            author: expect.any(String),
+                            body: expect.any(String),
+                            votes: expect.any(Number),
+                            comment_id: expect.any(Number),
+                            article_id: expect.any(Number),
+                            created_at: expect.any(String)
                         })
                     )
+                    expect(comment.author).toBe('rogersop')
+                    expect(comment.body).toBe('additional coffees required')
+                })
+            })
+            test('status 404: when article_id is invalid returns article not found', () => {
+                const input = {
+                    username: 'rogersop',
+                    body: 'additional coffees required'
+                }
+                return request(app)
+                .post('/api/articles/999/comments')
+                .send(input)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Article 999 not found')
+                })
+            })
+            test('status 404: when user doesnt exists returns user not found', () => {
+                const input = {
+                    username: 'invalid',
+                    body: 'additional coffees required'
+                }
+                return request(app)
+                .post('/api/articles/5/comments')
+                .send(input)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('User invalid not found')
+                })
+            })
+            test('status 400: when input does not contain username or body returns invalid intput', () => {
+                const input = {
+                    redHerring: 'deception'
+                }
+                return request(app)
+                .post('/api/articles/5/comments')
+                .send(input)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Input invalid, requires username and body')
                 })
             })
         })

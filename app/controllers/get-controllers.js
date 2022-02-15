@@ -1,4 +1,4 @@
-const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, addComment } = require('../models/get-models')
+const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, addComment, fetchUserByID } = require('../models/get-models')
 
 exports.getTopics = (req, res, next) => {
     fetchTopics().then(topics => {
@@ -50,11 +50,44 @@ exports.patchArticleByID = (req, res, next) => {
     .catch(next)
 }
 
+exports.getUserByID = (req, res, next) => {
+    const username = req.params.username
+    fetchUserByID(username).then(user => {
+        if(user == undefined) {
+            return Promise.reject({ status: 404, msg: `User ${username} not found`})
+        }
+        res.status(200).send({ user })
+    })
+    .catch(next)
+}
+
 exports.postComment = (req, res, next) => {
     const id = req.params.article_id
-    const body = req.body
-    addComment(id, body).then(comment => {
-        console.log(comment)
+    const comment = req.body
+    if(!comment.hasOwnProperty('username') || !comment.hasOwnProperty('body')) {
+        return Promise.reject({ status: 400, msg: 'Input invalid, requires username and body'})
+        .catch((err) => {
+            next(err)
+        })
+    }
+    fetchUserByID(req.body.username)
+    .then((user) => {
+        if(user == undefined) {
+            return Promise.reject({ status: 404, msg: `User ${req.body.username} not found`})
+        }
+    })
+    .then(() => {
+        return fetchArticleByID(id)
+    })   
+    .then(article => {
+        if(article == undefined) {
+            return Promise.reject({ status: 404, msg: `Article ${id} not found`})
+        }
+    })
+    .then(() => {
+        addComment(id, comment).then(comment => {
+        res.status(201).send({ comment })
+        })
     })
     .catch(next)
 }

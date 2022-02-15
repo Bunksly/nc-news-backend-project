@@ -89,10 +89,21 @@ exports.updateArticleByID = (id, inc_votes) => {
     })
 }
 
-exports.addComment = (id, body) => {
-    console.log(id, body)
+exports.fetchUserByID = (username) => {
     return db.query(`
-    INSERT INTO comments
-    
-    `)
+    SELECT username, name, avatar_url FROM users
+    WHERE username = $1;
+    `, [username]).then(({ rows }) => {
+        return rows[0]
+    })
+}
+
+exports.addComment = (id, comment) => {
+    return db.query(`
+    INSERT INTO comments (author, body, article_id)
+    VALUES ($1, $2, $3)
+    RETURNING *;
+    `, [comment.username, comment.body, id]).then(({ rows }) => {
+        return rows[0]
+    })
 }
