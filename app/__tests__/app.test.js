@@ -260,7 +260,7 @@ describe('app.js', () => {
         })
     })
     describe('PATCH', () => {
-        describe('/api/articles/:article_id', () => {
+        describe.only('/api/articles/:article_id', () => {
             test('status 200: returns updated article', () => {
                 const inc_votes = { inc_votes : 1 }
                 const expectOutput = {
@@ -270,6 +270,24 @@ describe('app.js', () => {
                     author: "rogersop",
                     created_at: expect.any(String),
                     votes: 1,
+                  }
+                return request(app)
+                .patch('/api/articles/5')
+                .send(inc_votes)
+                .expect(200)
+                .then(({ body : { article }}) => {
+                    expect(article).toEqual(expectOutput)
+                })
+            })
+            test('status 200: works with negative numbers', () => {
+                const inc_votes = { inc_votes : -3 }
+                const expectOutput = {
+                    article_id: 5,
+                    title: "UNCOVERED: catspiracy to bring down democracy",
+                    topic: "cats",
+                    author: "rogersop",
+                    created_at: expect.any(String),
+                    votes: -3,
                   }
                 return request(app)
                 .patch('/api/articles/5')
