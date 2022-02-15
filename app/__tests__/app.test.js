@@ -455,12 +455,20 @@ describe('app.js', () => {
             })
         })
     })
-    describe('DELETE', () => {
+    describe.only('DELETE', () => {
         describe('/api/comments/:comment_id', () => {
             test('status 204: returns no content', () => {
                 return request(app)
                 .delete('/api/comments/4')
                 .expect(204)
+            })
+            test('status 404: comment doesnt exist anyway', () => {
+                return request(app)
+                .delete('/api/comments/9999')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Comment 9999 not found')
+                })
             })
         })
     })

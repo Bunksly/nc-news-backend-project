@@ -117,3 +117,21 @@ exports.addComment = (id, comment) => {
         return rows[0]
     })
 }
+
+exports.fetchCommentByID = (id) => {
+    return db.query(`
+    SELECT * FROM comments
+    WHERE comment_id = $1
+    `, [id]).then(({ rows }) => {
+        return rows[0]
+    })
+}
+
+exports.removeCommentByID = (id) => {
+    return db.query(`
+    DELETE FROM comments
+    WHERE comment_id = $1
+    `, [id]).then(() => {
+        return 'done'
+    })
+}
