@@ -12,7 +12,6 @@ exports.errorHandler = (err, req, res, next) => {
 }
 
 exports.handle500s = (err, req, res, next) => {
-    console.log(err)
     const obj = {
         msg: 'Server error'
     }
