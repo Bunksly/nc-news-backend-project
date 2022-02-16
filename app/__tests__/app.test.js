@@ -93,7 +93,8 @@ describe('app.js', () => {
                                 title: expect.any(String),
                                 topic: expect.any(String),
                                 created_at: expect.any(String),
-                                votes: expect.any(Number)
+                                votes: expect.any(Number),
+                                comment_count: expect.any(Number)
                             })
                         )
                     })
@@ -127,6 +128,16 @@ describe('app.js', () => {
                         .expect(200)
                         .then(({ body : { articles }}) => {
                             expect(articles).toBeSortedBy('author', {
+                                descending: true
+                            })
+                        })
+                    })
+                    test('/api/articles?sort_by=comment_count', () => {
+                        return request(app)
+                        .get('/api/articles?sort_by=comment_count')
+                        .expect(200)
+                        .then(({ body : { articles }}) => {
+                            expect(articles).toBeSortedBy('comment_count', {
                                 descending: true
                             })
                         })
@@ -261,9 +272,11 @@ describe('app.js', () => {
                     article_id: 5,
                     title: "UNCOVERED: catspiracy to bring down democracy",
                     topic: "cats",
+                    body: "Bastet walks amongst us, and the cats are taking arms!",
                     author: "rogersop",
                     created_at: expect.any(String),
                     votes: 0,
+                    comment_count: 2
                   }
                 return request(app)
                 .get('/api/articles/5')

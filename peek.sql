@@ -12,9 +12,9 @@
 -- --     ON articles.article_id = comments.article_id
 -- -- GROUP BY articles.article_id
 
-SELECT articles.author, title, topic, articles.created_at, articles.votes, articles.article_id, CAST(COUNT(comments.article_id) AS INT) AS comment_count
-FROM comments  
-RIGHT JOIN articles 
-ON articles.article_id = comments.article_id 
-GROUP BY articles.article_id
-ORDER BY articles.article_id
+-- SELECT articles.author, title, articles.body, topic, articles.created_at, articles.votes, articles.article_id, CAST(COUNT(comments.article_id) AS INT) AS comment_count
+-- FROM comments  
+-- RIGHT JOIN articles 
+-- ON articles.article_id = comments.article_id 
+-- WHERE articles.article_id = $1
+-- GROUP BY articles.article_id
