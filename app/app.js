@@ -1,5 +1,5 @@
 const express = require('express')
-const { getTopics, getUsers, getArticles, getArticleByID, patchArticleByID, getCommentsByArticleID, postComment, getUserByID, deleteCommentByID } = require('./controllers/get-controllers')
+const { getTopics, getUsers, getArticles, getArticleByID, patchArticleByID, getCommentsByArticleID, postComment, getUserByID, deleteCommentByID, getEndpoints } = require('./controllers/get-controllers')
 const { pathNotFoundErr, errorHandler, handle500s } = require('./controllers/error-controllers')
 
 const app = express()
@@ -12,6 +12,7 @@ app.get('/api/articles', getArticles)
 app.get('/api/articles/:article_id', getArticleByID)
 app.get('/api/articles/:article_id/comments', getCommentsByArticleID)
 app.get('/api/users/:username', getUserByID)
+app.get('/api', getEndpoints)
 
 app.patch('/api/articles/:article_id', patchArticleByID)
 
