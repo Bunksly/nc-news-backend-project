@@ -25,7 +25,8 @@ exports.fetchArticles = (sort_by = 'created_at', order = 'desc', topic = undefin
         'title',
         'topic',
         'author',
-        'votes'
+        'votes',
+        'comment_count'
     ]
 
     const validOrder = [
@@ -47,9 +48,13 @@ exports.fetchArticles = (sort_by = 'created_at', order = 'desc', topic = undefin
     }
 
     return db.query(`
-    SELECT author, title, topic, created_at, votes, article_id FROM articles
+    SELECT articles.author, title, topic, articles.created_at, articles.votes, articles.article_id, CAST(COUNT(comments.article_id) AS INT) AS comment_count
+    FROM comments  
+    RIGHT JOIN articles 
+    ON articles.article_id = comments.article_id 
     ${whereString}
-    ORDER BY ${sort_by} ${order};
+    GROUP BY articles.article_id
+    ORDER BY ${sort_by} ${order};   
     `, idArray).then(({ rows }) => {
         return rows
     })
@@ -57,8 +62,12 @@ exports.fetchArticles = (sort_by = 'created_at', order = 'desc', topic = undefin
 
 exports.fetchArticleByID = (id) => {
     return db.query(`
-    SELECT author, title, topic, created_at, votes, article_id FROM articles
-    WHERE article_id = $1;
+    SELECT articles.author, title, articles.body, topic, articles.created_at, articles.votes, articles.article_id, CAST(COUNT(comments.article_id) AS INT) AS comment_count
+    FROM comments  
+    RIGHT JOIN articles 
+    ON articles.article_id = comments.article_id 
+    WHERE articles.article_id = $1
+    GROUP BY articles.article_id;
     `, [id]).then(({ rows }) => {
         return rows[0]
     })
