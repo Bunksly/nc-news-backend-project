@@ -455,7 +455,7 @@ describe('app.js', () => {
             })
         })
     })
-    describe.only('DELETE', () => {
+    describe('DELETE', () => {
         describe('/api/comments/:comment_id', () => {
             test('status 204: returns no content', () => {
                 return request(app)
