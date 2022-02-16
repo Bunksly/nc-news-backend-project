@@ -116,7 +116,7 @@ exports.deleteCommentByID = (req, res, next) => {
     fetchCommentByID(id)
     .then(comment => {
         console.log(comment)
-        if(comment === undefined) {
+        if(!comment) {
             return Promise.reject({ status: 404, msg: `Comment ${id} not found`})
             .catch(err => {
                 next(err)
