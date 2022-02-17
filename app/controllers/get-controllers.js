@@ -1,4 +1,4 @@
-const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, fetchCommentsByArticleID, addComment, fetchUserByID, fetchCommentByID, removeCommentByID, updateCommentByID } = require('../models/get-models')
+const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, fetchCommentsByArticleID, addComment, fetchUserByID, fetchCommentByID, removeCommentByID, updateCommentByID, addTopic } = require('../models/get-models')
 const endpoints = require('../../endpoints.json')
 
 exports.getTopics = (req, res, next) => {
@@ -142,6 +142,20 @@ exports.patchCommentByID = (req, res, next) => {
             return Promise.reject({ status: 404, msg: `Comment ${id} not found`})
         }
         res.status(200).send({ comment })
+    })
+    .catch(next)
+}
+
+exports.postTopic = (req, res, next) => {
+    const topic = req.body
+    if(!topic.hasOwnProperty('slug') || !topic.hasOwnProperty('description')) {
+        return Promise.reject({ status: 400, msg: 'Input invalid requires slug and description'})
+        .catch((err) => {
+            next(err)
+        })
+    }
+    addTopic(topic).then((topic) => {
+        res.status(201).send ({ topic })
     })
     .catch(next)
 }

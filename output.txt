@@ -1,6 +1,8 @@
 You are now connected to database "nc_news_test" as user "bunksly".
-  author  |                     title                     |                          body                          | topic |     created_at      | votes | article_id | comment_count 
-----------+-----------------------------------------------+--------------------------------------------------------+-------+---------------------+-------+------------+---------------
- rogersop | UNCOVERED: catspiracy to bring down democracy | Bastet walks amongst us, and the cats are taking arms! | cats  | 2020-08-03 14:14:00 |     0 |          5 |             2
-(1 row)
+ slug  |          description           
+-------+--------------------------------
+ mitch | The man, the Mitch, the legend
+ cats  | Not dogs
+ paper | what books are made of
+(3 rows)
 
