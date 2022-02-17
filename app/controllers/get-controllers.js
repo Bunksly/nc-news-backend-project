@@ -129,3 +129,7 @@ exports.deleteCommentByID = (req, res, next) => {
     })
     .catch(next)
 }
+
+exports.getEndpoints = (req, res, next) => {
+    res.status(200).send({pathways: endpoints})
+}
