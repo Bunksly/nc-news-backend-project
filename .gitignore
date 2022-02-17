@@ -1,2 +1,6 @@
 node_modules
 .env.*
+peek.sql
+output.txt
+hosting.md
+error-handling.md
