@@ -6,7 +6,31 @@
     "description": "serves an array of all topics",
     "queries": [],
     "exampleResponse": {
-      "topics": [{ "slug": "football", "description": "Footie!" }]
+      "topics": [
+        { 
+          "slug": "football", "description": "Footie!"
+        }
+      ]
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {"username": "tickle122"}
+      ]
+    }
+  },
+  "GET /api/users/:username": {
+    "description": "serves a JSON object of the user with the given username",
+    "queries": [],
+    "exampleResponse": {
+      "user": {
+        "username": "tickle122",
+        "name": "Tom Tickle",
+        "avatar-url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+      }
     }
   },
   "GET /api/articles": {
@@ -19,9 +43,78 @@
           "topic": "cooking",
           "author": "weegembump",
           "body": "Text from the article..",
-          "created_at": 1527695953341
+          "created_at": 1527695953341,
+          "comment_count": "count of comments to article"
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves up a JSON object of article with given article_id",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+          "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "body": "Text from the article..",
+          "created_at": 1527695953341,
+          "comment_count": "count of comments to article"
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves up an array of all comments for article with given article_id",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 18,
+			    "votes": 6,
+			    "created_at": "2020-08-15T17:11:00.000Z",
+			    "author": "jessjelly",
+			    "body": "Text from the comment.."
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "increments or decrements vote count by value given on request body, serves the updated article",
+    "queries": [],
+    "exampleRequest": { 
+      "inc_votes": 1
+     },
+    "exampleResponse": {
+      "article": {
+        "author": "jessjelly",
+        "title": "Please stop worrying about Angular 3",
+        "topic": "coding",
+        "created_at": "2020-04-21T16:06:00.000Z",
+        "votes": 1,
+        "article_id": 5
+      }
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts request body to comments database with article_id key of value given",
+    "queries": [],
+    "exampleRequest": {
+      "username": "tickle122",
+      "body": "additional coffees required"
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 301,
+        "body": "additional coffees required",
+        "article_id": 5,
+        "author": "tickle122",
+        "votes": 0,
+        "created_at": "2022-02-17T10:09:09.519Z"
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes comment with given comment_id, returns no response",
+    "queries": []
   }
 }
