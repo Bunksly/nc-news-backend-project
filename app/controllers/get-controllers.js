@@ -1,4 +1,4 @@
-const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, fetchCommentsByArticleID, addComment, fetchUserByID, fetchCommentByID, removeCommentByID } = require('../models/get-models')
+const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, fetchCommentsByArticleID, addComment, fetchUserByID, fetchCommentByID, removeCommentByID, updateCommentByID } = require('../models/get-models')
 const endpoints = require('../../endpoints.json')
 
 exports.getTopics = (req, res, next) => {
@@ -132,4 +132,16 @@ exports.deleteCommentByID = (req, res, next) => {
 
 exports.getEndpoints = (req, res, next) => {
     res.status(200).send({pathways: endpoints})
+}
+
+exports.patchCommentByID = (req, res, next) => {
+    const id = req.params.comment_id
+    const inc_votes = req.body.inc_votes
+    updateCommentByID(id, inc_votes).then(comment => {
+        if(comment == undefined) {
+            return Promise.reject({ status: 404, msg: `Comment ${id} not found`})
+        }
+        res.status(200).send({ comment })
+    })
+    .catch(next)
 }

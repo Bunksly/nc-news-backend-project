@@ -417,6 +417,76 @@ describe('app.js', () => {
                 })
             })
         })
+        describe.only('/api/comments/:comment_id', () => {
+            test('status 200: returns updated comment', () => {
+                const inc_votes = { inc_votes : 1 }
+                const expectOutput = {
+                    body: "This morning, I showered for nine minutes.",
+                    votes: 17,
+                    author: "butter_bridge",
+                    article_id: 1,
+                    created_at: 1595294400000,
+                    comment_id: 18,
+                    created_at: expect.any(String)
+                  }
+                return request(app)
+                .patch('/api/comments/18')
+                .send(inc_votes)
+                .expect(200)
+                .then(({ body : { comment }}) => {
+                    expect(comment).toEqual(expectOutput)
+                })
+            })
+            test('status 200: works with negative numbers', () => {
+                const inc_votes = { inc_votes : -3 }
+                const expectOutput = {
+                    body: "This morning, I showered for nine minutes.",
+                    votes: 13,
+                    author: "butter_bridge",
+                    article_id: 1,
+                    created_at: 1595294400000,
+                    comment_id: 18,
+                    created_at: expect.any(String)
+                  }
+                return request(app)
+                .patch('/api/comments/18')
+                .send(inc_votes)
+                .expect(200)
+                .then(({ body : { comment }}) => {
+                    expect(comment).toEqual(expectOutput)
+                })
+            })
+            test('status 400: returns input object invalid', () => {
+                const inc_votes = { invalid : 1 }
+                return request(app)
+                .patch('/api/comments/5')
+                .send(inc_votes)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toEqual('Input object invalid')
+                })
+            })
+            test('status 400: returns inc_votes should be number', () => {
+                const inc_votes = { inc_votes : 'cat' }
+                return request(app)
+                .patch('/api/comments/5')
+                .send(inc_votes)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('inc_votes value should be number')
+                })
+            })
+            test('status 404: returns article not found when article_id not found', () => {
+                const inc_votes = { inc_votes : 1 }
+                return request(app)
+                .patch('/api/comments/999')
+                .send(inc_votes)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Comment 999 not found')
+                })
+            })
+        }) 
     })
     describe('POST', () => {
         describe('/api/articles/:article_id/comments', () => {

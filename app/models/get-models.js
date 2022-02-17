@@ -144,3 +144,28 @@ exports.removeCommentByID = (id) => {
         return 'done'
     })
 }
+
+exports.updateCommentByID =(id, inc_votes) => {
+    let symbol = `+`
+
+    if(inc_votes === undefined) {
+        return Promise.reject({ status: 400, msg: `Input object invalid`})
+    }
+    if(typeof(inc_votes) !== 'number') {
+        return Promise.reject({ status: 400, msg: `inc_votes value should be number`})
+    }
+    if(inc_votes < 0) {
+        inc_votes *= -1
+        symbol = `-`
+    }
+
+
+    return db.query(`
+    UPDATE comments
+    SET votes = votes ${symbol} $2
+    WHERE comment_id = $1
+    RETURNING *;
+    `, [id, inc_votes]).then(({ rows }) => {
+        return rows[0]
+    })
+}
