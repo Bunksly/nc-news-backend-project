@@ -20,6 +20,22 @@ describe('app.js', () => {
         })
     })
     describe('GET', () => {
+        describe('/api', () => {
+            test('status 200: returns json object with pathways', () => {
+                return request(app)
+                .get('/api')
+                .expect(200)
+                .then(({ body : { pathways }}) => {
+                    expect(pathways).toEqual(
+                        expect.objectContaining({
+                            "GET /api": expect.any(Object),
+                            "GET /api/articles": expect.any(Object),
+                            "GET /api/topics": expect.any(Object),
+                        })
+                    )
+                })
+            })
+        })
         describe('/api/topics', () => {
             test('status 200: returns array of objects containing slug and description', () => {
                 return request(app)
