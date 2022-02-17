@@ -1,4 +1,5 @@
 const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, fetchCommentsByArticleID, addComment, fetchUserByID, fetchCommentByID, removeCommentByID } = require('../models/get-models')
+const endpoints = require('../../endpoints.json')
 
 exports.getTopics = (req, res, next) => {
     fetchTopics().then(topics => {
@@ -115,7 +116,6 @@ exports.deleteCommentByID = (req, res, next) => {
     const id = req.params.comment_id
     fetchCommentByID(id)
     .then(comment => {
-        console.log(comment)
         if(!comment) {
             return Promise.reject({ status: 404, msg: `Comment ${id} not found`})
             .catch(err => {
@@ -128,4 +128,8 @@ exports.deleteCommentByID = (req, res, next) => {
         res.status(204).send()
     })
     .catch(next)
+}
+
+exports.getEndpoints = (req, res, next) => {
+    res.status(200).send({pathways: endpoints})
 }
