@@ -1,4 +1,5 @@
 const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, fetchCommentsByArticleID, addComment, fetchUserByID, fetchCommentByID, removeCommentByID } = require('../models/get-models')
+const endpoints = require('../../endpoints.json')
 
 exports.getTopics = (req, res, next) => {
     fetchTopics().then(topics => {
