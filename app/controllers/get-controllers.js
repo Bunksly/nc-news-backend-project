@@ -1,4 +1,4 @@
-const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, fetchCommentsByArticleID, addComment, fetchUserByID, fetchCommentByID, removeCommentByID, updateCommentByID, addTopic } = require('../models/get-models')
+const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, fetchCommentsByArticleID, addComment, fetchUserByID, fetchCommentByID, removeCommentByID, updateCommentByID, addTopic, fetchTopicBySlug, addArticle } = require('../models/get-models')
 const endpoints = require('../../endpoints.json')
 
 exports.getTopics = (req, res, next) => {
@@ -156,6 +156,39 @@ exports.postTopic = (req, res, next) => {
     }
     addTopic(topic).then((topic) => {
         res.status(201).send ({ topic })
+    })
+    .catch(next)
+}
+
+exports.postArticle = (req, res, next) => {
+    const article = req.body
+    if(!article.hasOwnProperty('author') 
+    || !article.hasOwnProperty('body')
+    || !article.hasOwnProperty('title')
+    || !article.hasOwnProperty('topic')) {
+        return Promise.reject({ status: 400, msg: 'Input invalid, requires author, body, title and topic'})
+        .catch((err) => {
+            next(err)
+        })
+    }
+    fetchUserByID(req.body.author)
+    .then((user) => {
+        if(user == undefined) {
+            return Promise.reject({ status: 404, msg: `User ${req.body.author} not found`})
+        }
+    })
+    .then(() => {
+        return fetchTopicBySlug(req.body.topic) 
+    })   
+    .then(topic => {
+        if(topic == undefined) {
+            return Promise.reject({ status: 404, msg: `Topic ${req.body.topic} not found`})
+        }
+    })
+    .then(() => {
+        addArticle(article).then(article => {
+        res.status(201).send({ article })
+        })
     })
     .catch(next)
 }
