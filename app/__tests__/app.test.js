@@ -417,7 +417,7 @@ describe('app.js', () => {
                 })
             })
         })
-        describe.only('/api/comments/:comment_id', () => {
+        describe('/api/comments/:comment_id', () => {
             test('status 200: returns updated comment', () => {
                 const inc_votes = { inc_votes : 1 }
                 const expectOutput = {
@@ -550,6 +550,39 @@ describe('app.js', () => {
                 .expect(400)
                 .then(({ body }) => {
                     expect(body.msg).toBe('Input invalid, requires username and body')
+                })
+            })
+        })
+        describe.only('/api/topics', () => {
+            test('status 201: returns posted topic', () => {
+                const input = {
+                    slug: "topic",
+                    description: "topic description"
+                }
+                return request(app)
+                .post('/api/topics')
+                .send(input)
+                .expect(201)
+                .then(({ body : { topic }}) => {
+                    expect(topic).toEqual(
+                        expect.objectContaining({
+                            slug: "topic",
+                            description: "topic description"
+                        })
+                    )
+                })
+            })
+            test('status 400: when request does not contain slug or description returns error', () => {
+                const input = {
+                    topic: "topic",
+                    body: "topic description"
+                }
+                return request(app)
+                .post('/api/topics')
+                .send(input)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Input invalid requires slug and description')
                 })
             })
         })
