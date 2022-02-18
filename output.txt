@@ -1,8 +1,0 @@
-You are now connected to database "nc_news_test" as user "bunksly".
- slug  |          description           
--------+--------------------------------
- mitch | The man, the Mitch, the legend
- cats  | Not dogs
- paper | what books are made of
-(3 rows)
-

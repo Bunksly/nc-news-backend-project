@@ -95,8 +95,39 @@
       }
     }
   },
+  "PATCH /api/comments/:comment_id": {
+    "description": "increments or decrements vote count by value given on request body, serves the updated comment",
+    "queries": [],
+    "exampleRequest": { 
+      "inc_votes": 1
+     },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 5,
+        "body": "Text from the comment...",
+        "article_id": 17,
+        "author": "weegembump",
+        "votes": -3,
+        "created_at": "2020-04-03T20:17:00.000Z"
+      }
+    }
+  },
+  "POST /api/topics": {
+    "description": "posts request body to topics table",
+    "queries": [],
+    "exampleRequest": {
+      "slug": "topic",
+      "description": "topic description"
+    },
+    "exampleResponse": {
+      "topic": {
+        "slug": "topic",
+        "description": "topic description"
+      }
+    }
+  },
   "POST /api/articles/:article_id/comments": {
-    "description": "posts request body to comments database with article_id key of value given",
+    "description": "posts request body to comments table with article_id key of value given",
     "queries": [],
     "exampleRequest": {
       "username": "tickle122",
@@ -113,8 +144,34 @@
       }
     }
   },
+  "POST /api/articles": {
+    "description": "posts request body to articles table",
+    "queries": [],
+    "exampleRequest": {
+      "author": "tickle122",
+      "title": "test-title",
+      "body": "dont rest on your lorems",
+      "topic": "football"
+  },
+    "exampleResponse": {
+      "article": {
+        "author": "tickle122",
+        "title": "test-title",
+        "body": "dont rest on your lorems",
+        "topic": "football",
+        "created_at": "2022-02-18T14:49:05.164Z",
+        "votes": 0,
+        "article_id": 37,
+        "comment_count": 0
+      }
+    }
+  },
   "DELETE /api/comments/:comment_id": {
     "description": "deletes comment with given comment_id, returns no response",
+    "queries": []
+  },
+  "DELETE /api/articles/:article_id": {
+    "description": "deletes article with given article_id, returns no response",
     "queries": []
   }
 }
