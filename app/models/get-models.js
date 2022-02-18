@@ -179,3 +179,33 @@ exports.addTopic = (topic) => {
         return rows[0]
     })
 }
+
+exports.addArticle = (article) => {
+    return db.query(`
+    INSERT INTO articles (author, title, body, topic)
+    VALUES ($1, $2, $3, $4)
+    RETURNING article_id;
+    `, [article.author, article.title, article.body, article.topic]).then(({ rows }) => {
+        return rows[0].article_id
+    }).then((id) => {
+        return db.query(`
+        SELECT articles.author, title, articles.body, topic, articles.created_at, articles.votes, articles.article_id, CAST(COUNT(comments.article_id) AS INT) AS comment_count
+        FROM comments  
+        RIGHT JOIN articles 
+        ON articles.article_id = comments.article_id 
+        WHERE articles.article_id = $1
+        GROUP BY articles.article_id;
+        `, [id]).then(({ rows }) => {
+        return rows[0]
+        })
+    })
+}
+
+exports.fetchTopicBySlug = (topic) => {
+    return db.query(`
+    SELECT * FROM topics
+    WHERE slug = $1;
+    `, [topic]).then(({ rows }) => {
+        return rows[0]
+    })
+}
