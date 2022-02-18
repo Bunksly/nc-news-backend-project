@@ -553,7 +553,7 @@ describe('app.js', () => {
                 })
             })
         })
-        describe.only('/api/topics', () => {
+        describe('/api/topics', () => {
             test('status 201: returns posted topic', () => {
                 const input = {
                     slug: "topic",
@@ -586,6 +586,8 @@ describe('app.js', () => {
                 })
             })
         })
+
+        
     })
     describe('DELETE', () => {
         describe('/api/comments/:comment_id', () => {
