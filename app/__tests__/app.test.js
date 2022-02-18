@@ -676,7 +676,7 @@ describe('app.js', () => {
                 })
             })
         })
-        describe.only('/api/articles/:article_id', () => {
+        describe('/api/articles/:article_id', () => {
             test('status 204: returns no content', () => {
                 return request(app)
                 .delete('/api/articles/4')
