@@ -209,3 +209,12 @@ exports.fetchTopicBySlug = (topic) => {
         return rows[0]
     })
 }
+
+exports.removeArticleByID = (id) => {
+    return db.query(`
+    DELETE FROM articles
+    WHERE article_id = $1;
+    `, [id]).then(() => {
+        return 'done'
+    })
+}

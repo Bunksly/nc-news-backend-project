@@ -1,4 +1,4 @@
-const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, fetchCommentsByArticleID, addComment, fetchUserByID, fetchCommentByID, removeCommentByID, updateCommentByID, addTopic, fetchTopicBySlug, addArticle } = require('../models/get-models')
+const { fetchTopics, fetchUsers, fetchArticles, fetchArticleByID, updateArticleByID, fetchCommentsByArticleID, addComment, fetchUserByID, fetchCommentByID, removeCommentByID, updateCommentByID, addTopic, fetchTopicBySlug, addArticle, removeArticleByID } = require('../models/get-models')
 const endpoints = require('../../endpoints.json')
 
 exports.getTopics = (req, res, next) => {
@@ -189,6 +189,24 @@ exports.postArticle = (req, res, next) => {
         addArticle(article).then(article => {
         res.status(201).send({ article })
         })
+    })
+    .catch(next)
+}
+
+exports.deleteArticleByID = (req, res, next) => {
+    const id = req.params.article_id
+    fetchArticleByID(id)
+    .then(article => {
+        if(!article) {
+            return Promise.reject({ status: 404, msg: `Article ${id} not found`})
+            .catch(err => {
+                next(err)
+            })
+        }  
+    })
+    removeArticleByID(id)
+    .then(() => {
+        res.status(204).send()
     })
     .catch(next)
 }

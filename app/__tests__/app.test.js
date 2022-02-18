@@ -676,5 +676,20 @@ describe('app.js', () => {
                 })
             })
         })
+        describe.only('/api/articles/:article_id', () => {
+            test('status 204: returns no content', () => {
+                return request(app)
+                .delete('/api/articles/4')
+                .expect(204)
+            })
+            test('status 404: comment doesnt exist anyway', () => {
+                return request(app)
+                .delete('/api/articles/9999')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Article 9999 not found')
+                })
+            })
+        })
     })
 })
