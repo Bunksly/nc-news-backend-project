@@ -15,7 +15,7 @@ const {
   postTopic,
   postArticle,
   deleteArticleByID,
-} = require("./controllers/get-controllers");
+} = require("./controllers/api-controllers");
 const {
   pathNotFoundErr,
   errorHandler,
