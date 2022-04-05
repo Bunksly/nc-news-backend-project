@@ -2,7 +2,7 @@
 
 LINK TO HOSTED VERSION:
 
-    https://backend-portfolio-project.herokuapp.com/api/topics
+   https://nc-news-backend-project.herokuapp.com/api
 
 PROJECT DESCRIPTION:
 
@@ -10,7 +10,7 @@ PROJECT DESCRIPTION:
 
 to clone link, go to desired directory in your command line and type:
 
-    git clone https://github.com/Bunksly/Portfolio-project.git
+    git clone https://github.com/Bunksly/nc-news-backend-project.git
 
 to install dependencies type 'npm i' followed by each of these individually:
 
@@ -41,5 +41,5 @@ to run tests type:
 
     npm test app.test.js
 
-minimum Node.js version: 
-minimum postgres version:
+minimum Node.js version: v10.19.0
+minimum postgres version: v12.0.0
